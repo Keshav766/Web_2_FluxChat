@@ -1,7 +1,8 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import ConnectToDB from "./configs/DBConnection.js";
-import User from "./models/user.js";
+import User from "./models/user.model.js";
+import authRouter from "./routes/auth.routes.js";
 
 dotenv.config();
 
@@ -12,11 +13,7 @@ const db_url = process.env.MONGODB_URL;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 
-app.post("/", (req, res) => {
-    const {name, userName} = req.body;
-    User.create({name, userName});    
-    res.send("so this is working");
-})
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
     ConnectToDB();
