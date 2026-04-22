@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import ConnectToDB from "./configs/DBConnection.js";
 import User from "./models/user.model.js";
 import authRouter from "./routes/auth.routes.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ const db_url = process.env.MONGODB_URL;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 

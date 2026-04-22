@@ -36,12 +36,61 @@ export const signup = async (req, res) => {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000,
             sameSite: "None",
-            secure: false
+            secure: true
         })
 
         return res.status(201).json({ createdUser });
 
     } catch (err) {
         return res.status(500).json({ message: `signup error ${err.message}` });
+    }
+}
+
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "all fields are required" });
+    }
+
+    try {
+        const matchedUser = await User.findOne({ email });
+
+        if (matchedUser === null) {
+            return res.status(400).json({ message: "User not found/for dev" });
+        }
+
+        const verified = await bcrypt.compare(password, matchedUser.password);
+
+        if (!verified) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+        }
+
+        const token = GenerateToken(matchedUser._id);
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            sameSite: "None",
+            secure: true
+        })
+
+        return res.status(200).json({ message: "Logged in", data: matchedUser });
+
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
+    }
+}
+
+export const logout = (req, res) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "None",
+            secure: false
+        });
+        return res.status(200).json({ message: "log out successfully" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
     }
 }
