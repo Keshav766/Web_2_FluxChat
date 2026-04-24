@@ -1,6 +1,8 @@
+import { setUserData } from '../redux/userSlice.js';
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -10,6 +12,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,7 +22,9 @@ function Login() {
       const result = await axios.post(`${serverURL}/api/auth/login`, {
         email, password
       }, { withCredentials: true });
-      console.log(result);
+      dispatch(setUserData(result.data));
+      setEmail("");
+      setPassword("");
       setLoading(false);
     } catch (error) {
       setLoading(false);

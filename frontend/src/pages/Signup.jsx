@@ -1,7 +1,9 @@
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { setUserData } from '../redux/userSlice.js';
 
 function Signup() {
   const [show, setShow] = useState(false);
@@ -11,22 +13,27 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
+  const dispatch = useDispatch();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      setErr("");
       const result = await axios.post(`${serverURL}/api/auth/signup`, {
         userName, email, password
       },
         { withCredentials: true }
       );
+      dispatch(setUserData(result.data));
+      setUsername("")
+      setEmail("");
+      setPassword("");
       setLoading(false);
+      setErr("");
       console.log(result);
     } catch (error) {
-      setErr(error?.response?.data?.message);
       setLoading(false);
+      setErr(error?.response?.data?.message);
     }
   }
 
