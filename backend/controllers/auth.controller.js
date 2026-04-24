@@ -26,11 +26,11 @@ export const signup = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const createdUser = await User.create({
+        const user = await User.create({
             userName, email, password: hashedPassword
         })
 
-        const token = GenerateToken(createdUser._id);
+        const token = GenerateToken(user._id);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -39,7 +39,7 @@ export const signup = async (req, res) => {
             secure: true
         })
 
-        return res.status(201).json({ createdUser });
+        return res.status(201).json(user);
 
     } catch (err) {
         return res.status(500).json({ message: `signup error ${err.message}` });
@@ -54,19 +54,19 @@ export const login = async (req, res) => {
     }
 
     try {
-        const matchedUser = await User.findOne({ email });
+        const user = await User.findOne({ email });
 
-        if (matchedUser === null) {
+        if (user === null) {
             return res.status(400).json({ message: "User not found/for dev" });
         }
 
-        const verified = await bcrypt.compare(password, matchedUser.password);
+        const verified = await bcrypt.compare(password, user.password);
 
         if (!verified) {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
 
-        const token = GenerateToken(matchedUser._id);
+        const token = GenerateToken(user._id);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
             secure: true
         })
 
-        return res.status(200).json({ message: "Logged in", data: matchedUser });
+        return res.status(200).json(user);
 
     } catch (err) {
         return res.status(500).json({ message: err.message })
