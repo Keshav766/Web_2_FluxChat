@@ -1,10 +1,11 @@
 import { Router } from "express";
 import Authenticated from "../middlewares/Authenticated.js";
-import { getCurrentUser } from "../controllers/user.controller.js";
+import { editProfile, getCurrentUser } from "../controllers/user.controller.js";
+import { upload } from "../middlewares/multer.js";
 
 const userRouter = Router();
 
 userRouter.get("/current", Authenticated, getCurrentUser)
-
+userRouter.put("/profile", Authenticated, upload.single("image") ,editProfile)
 
 export default userRouter
