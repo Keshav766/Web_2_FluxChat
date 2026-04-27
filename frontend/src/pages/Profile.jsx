@@ -7,7 +7,7 @@ import {
     form,
     inputDisabled,
     profileCameraIconWrapper
-} from '../styles/layoutStyles';
+} from '../styles/profile.js';
 import React, { useRef, useState } from 'react';
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
