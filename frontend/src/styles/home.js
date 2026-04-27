@@ -18,5 +18,5 @@ export const sidebar = {
 
     searchOnWrapper: 'w-full h-12 bg-white shadow-gray-500 shadow-lg flex items-center gap-2.5 mt-2.5 rounded-full overflow-hidden p-5',
 
-
+    logout: 'w-15 h-15 bg-[#20c7ff] text-gray-700 rounded-full overflow-hidden flex justify-center items-center mt-2.5 shadow-gray-500 shadow-lg cursor-pointer fixed bottom-5 left-5',
 }
