@@ -1,6 +1,6 @@
 
 export const sidebar = {
-    container: 'lg:w-[30%] w-full h-full bg-slate-200',
+    // container: `lg:w-[30%] ${selectedUser ? "flex" : "hidden"} w-full h-full bg-slate-200`,
 
     header: 'w-full h-75 bg-[#20c7ff] rounded-b-[30%] shadow-gray-400 shadow-lg flex flex-col gap-2.5 justify-center px-5',
 
@@ -24,9 +24,19 @@ export const sidebar = {
 
     chatlistContainer: 'w-full h-[60vh] overflow-auto flex flex-col gap-4 mt-6',
 
-    chatlistItem: 'w-[95%] h-12 flex justify-start items-center gap-3 shadow-gray-500 shadow-lg bg-white rounded-full hover:bg-[#49caf5] cursor-pointer',
+    chatlistItem: 'w-[95%] h-12 flex justify-start items-center gap-3 shadow-gray-500 shadow-lg bg-white rounded-full hover:bg-[#92e0f9] cursor-pointer',
 
     chatlistProfileImageWrapper: 'w-12 h-12 bg-white rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 shadow-lg',
+}
 
+export const messagearea = {
 
+    header: 'w-full h-20 bg-[#1b7897] rounded-b-[20px] shadow-gray-400 shadow-lg flex items-center gap-5 px-5',
+
+    headerImageWrapper: "w-12 h-12  bg-white rounded-full overflow-hidden flex justify-center items-center shadow-gray-500 shadow-lg",
+
+    headerName: 'text-white font-semibold text-[15px]',
+
+    base: 'w-full h-full flex flex-col justify-center items-center',
+    
 }

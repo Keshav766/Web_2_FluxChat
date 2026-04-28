@@ -7,7 +7,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
-import { setUserData, setOtherUsers } from "../redux/userSlice";
+import { setUserData, setOtherUsers, setSelectedUser } from "../redux/userSlice";
 import { useNavigate } from 'react-router-dom';
 
 
@@ -16,6 +16,7 @@ function SideBar() {
     const [search, setSearch] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const { selectedUser } = useSelector(state => state.user)
 
     const handleLogOut = async () => {
         try {
@@ -36,7 +37,7 @@ function SideBar() {
     }
 
     return (
-        <div className={sidebar.container}>
+        <div className={`lg:w-[30%] lg:block ${!selectedUser ? "block" : "hidden"} w-full h-full bg-slate-200`}>
             <div
                 className={sidebar.logout}
                 onClick={handleLogOut}
@@ -90,7 +91,10 @@ function SideBar() {
             </div>
             <div className={sidebar.chatlistContainer}>
                 {otherUsers?.map((user) => (
-                    <div className={sidebar.chatlistItem}>
+                    <div
+                        className={sidebar.chatlistItem}
+                        onClick={() => dispatch(setSelectedUser(user))}
+                    >
                         <div className={sidebar.chatlistProfileImageWrapper}
                             key={user._id}>
                             <img
