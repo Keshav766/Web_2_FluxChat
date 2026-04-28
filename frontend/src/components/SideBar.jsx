@@ -46,11 +46,12 @@ function SideBar() {
             <div className={sidebar.header}>
                 <h1 className={sidebar.title}>FluxChat</h1>
                 <div className={sidebar.userRow}>
-                    <h1 className={sidebar.userName}>Yo, {userData?.name}</h1>
+                    <h1 className={sidebar.userName}>Yo, {userData?.name || "User"}</h1>
                     <div className={sidebar.profileImageWrapper}>
                         <img
                             src={userData.image || dp}
-                            className={sidebar.profileImage}
+                            className={sidebar.currentProfileImage}
+                            onClick={() => navigate("/profile")}
                         />
                     </div>
                 </div>
@@ -75,17 +76,31 @@ function SideBar() {
 
                         </form>
                     }
-                    {otherUsers?.map((user) => (
+                    {!search && otherUsers?.map((user) => (
                         <div className={sidebar.profileImageWrapper}
                             key={user._id}
                         >
                             <img
                                 src={user.image || dp}
-                                className={sidebar.profileImage}
+                                className={sidebar.otherProfileImage}
                             />
                         </div>
                     ))}
                 </div>
+            </div>
+            <div className={sidebar.chatlistContainer}>
+                {otherUsers?.map((user) => (
+                    <div className={sidebar.chatlistItem}>
+                        <div className={sidebar.chatlistProfileImageWrapper}
+                            key={user._id}>
+                            <img
+                                src={user.image || dp}
+                                className={sidebar.otherProfileImage}
+                            />
+                        </div>
+                        <h1 className='text-gray-600 font-semibold text-[15px]'>{user.name || user.userName}</h1>
+                    </div>
+                ))}
             </div>
         </div>
     )

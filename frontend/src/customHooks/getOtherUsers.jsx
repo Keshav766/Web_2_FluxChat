@@ -6,8 +6,12 @@ import { useDispatch, useSelector } from "react-redux"
 
 const useGetOtherUsers = () => {
     const dispatch = useDispatch();
+    const { userData } = useSelector(state => state.user)
+
     useEffect(() => {
-        const fetchUser = async () => {
+        if (!userData?._id) return;
+
+        const fetchUsers = async () => {
             try {
                 const result = await axios.get(
                     `${serverURL}/api/user/others`,
@@ -17,8 +21,8 @@ const useGetOtherUsers = () => {
                 console.log(error.message);
             }
         }
-        fetchUser();
-    }, []);
+        fetchUsers();
+    }, [userData]);
 }
 
 export default useGetOtherUsers;
