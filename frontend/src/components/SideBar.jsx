@@ -93,10 +93,10 @@ function SideBar() {
                 {otherUsers?.map((user) => (
                     <div
                         className={sidebar.chatlistItem}
+                        key={user._id}
                         onClick={() => dispatch(setSelectedUser(user))}
                     >
-                        <div className={sidebar.chatlistProfileImageWrapper}
-                            key={user._id}>
+                        <div className={sidebar.chatlistProfileImageWrapper}>
                             <img
                                 src={user.image || dp}
                                 className={sidebar.otherProfileImage}
