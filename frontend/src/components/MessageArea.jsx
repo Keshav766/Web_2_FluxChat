@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { FaArrowLeft } from "react-icons/fa";
 import { BsEmojiGrin } from "react-icons/bs";
 import { FaImages } from "react-icons/fa";
@@ -12,15 +12,17 @@ import SenderMessage from './SenderMessage.jsx';
 import ReceiverMessage from './ReceiverMessage.jsx';
 import axios from 'axios';
 import { serverURL } from '../main.jsx';
+import { setMessages } from '../redux/messageSlice';
 
 function MessageArea() {
-  const { selectedUser } = useSelector(state => state.user)
+  const { selectedUser, userData } = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [showPicker, setShowPicker] = useState(false)
   const [input, setInput] = useState("")
   const [frontendImage, setFrontendImage] = useState("")
   const [backendImage, setBackendImage] = useState("")
   const image = useRef()
+  const { messages } = useSelector(state => state.message)
 
   const handleImage = (e) => {
     const file = e.target.files[0]
@@ -42,7 +44,7 @@ function MessageArea() {
         `${serverURL}/api/message/send/${selectedUser._id}`,
         formData,
         { withCredentials: true })
-      console.log(result.data)
+      dispatch(setMessages([...messages, result.data]))
       setInput("")
       setFrontendImage("")
       setBackendImage(null)
@@ -81,8 +83,8 @@ function MessageArea() {
               {selectedUser?.userName || "User"}
             </h1>
           </div>
-          <div className='w-full h-full flex flex-col pt-6 px-5 pb-30 overflow-auto'>
-            {showPicker && <div className=' absolute bottom-28 left-5 '>
+          <div className='w-full h-full flex flex-col pt-6 px-5 pb-30 overflow-auto gap-4'>
+            {showPicker && <div className=' absolute bottom-28 left-5 z-50'>
               <EmojiPicker
                 width={250}
                 height={350}
@@ -91,8 +93,23 @@ function MessageArea() {
               />
             </div>
             }
-            <SenderMessage />
-            <ReceiverMessage />
+
+            {messages && messages?.map((mess) =>
+              mess.sender === userData._id ? (
+                <SenderMessage
+                  key={mess._id}
+                  image={mess.image}
+                  message={mess.message}
+                />
+              ) : (
+                <ReceiverMessage
+                  key={mess._id}
+                  image={mess.image}
+                  message={mess.message}
+                />
+              )
+            )}
+
           </div>
         </div>
       }

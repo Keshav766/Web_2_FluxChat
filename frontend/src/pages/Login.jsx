@@ -1,4 +1,4 @@
-import { setUserData } from '../redux/userSlice.js';
+import { setSelectedUser, setUserData } from '../redux/userSlice.js';
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -36,6 +36,7 @@ function Login() {
       );
 
       dispatch(setUserData(result.data));
+      dispatch(setSelectedUser(null))
 
       setEmail("");
       setPassword("");
