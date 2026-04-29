@@ -4,7 +4,7 @@ import SideBar from '../components/SideBar'
 
 function Home() {
     return (
-        <div className='w-full h-screen flex'>
+        <div className='w-full h-screen flex overflow-hidden'>
             <SideBar />
             <MessageArea />
         </div>
