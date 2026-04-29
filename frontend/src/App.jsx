@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup";
@@ -7,11 +7,23 @@ import { useSelector } from "react-redux";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import useGetOtherUsers from "./customHooks/getOtherUsers";
+import { io } from "socket.io-client";
+import { serverURL } from "./main.jsx";
 
 function App() {
   const { userData } = useSelector(state => state.user);
   useGetCurrentUser();
   useGetOtherUsers();
+
+  useEffect(() => {
+    const socket = io(`${serverURL}`, {
+      query: {
+        userId: userData?._id
+      }
+    })
+
+  }, [userData])
+
   return (
     <Routes>
       <Route

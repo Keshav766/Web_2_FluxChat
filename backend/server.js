@@ -7,10 +7,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import userRouter from "./routes/user.routes.js";
 import messageRouter from "./routes/message.routes.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
-const app = express();
 const port = process.env.PORT || 9991;
 const db_url = process.env.MONGODB_URL;
 
@@ -26,7 +26,7 @@ app.use("/api/auth", authRouter)
 app.use("/api/user", userRouter)
 app.use("/api/message", messageRouter)
 
-app.listen(port, () => {
+server.listen(port, () => {
     ConnectToDB();
     console.log(`Server started at ${port}`)
 })
