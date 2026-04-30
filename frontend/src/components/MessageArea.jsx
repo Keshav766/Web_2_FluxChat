@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft } from "react-icons/fa";
 import { BsEmojiGrin } from "react-icons/bs";
 import { FaImages } from "react-icons/fa";
@@ -15,7 +15,7 @@ import { serverURL } from '../main.jsx';
 import { setMessages } from '../redux/messageSlice';
 
 function MessageArea() {
-  const { selectedUser, userData } = useSelector(state => state.user)
+  const { selectedUser, userData, socket } = useSelector(state => state.user)
   const dispatch = useDispatch()
   const [showPicker, setShowPicker] = useState(false)
   const [input, setInput] = useState("")
@@ -32,6 +32,7 @@ function MessageArea() {
 
   const handleSendingMessage = async (e) => {
     e.preventDefault()
+
     try {
       const formData = new FormData()
 
@@ -58,6 +59,13 @@ function MessageArea() {
     setInput(prev => prev + emojiData.emoji)
     setShowPicker(false)
   }
+
+  useEffect(() => {
+    socket.on("newMessage", (mess) => {
+      dispatch(setMessages([...messages, mess]))
+    })
+    return () => socket.off("newMessage")
+  }, [messages, setMessages])
 
   return (
     <div className={`lg:w-[70%] ${selectedUser ? "flex" : "hidden"} lg:flex w-full h-full bg-slate-200 border-l-3 border-gray-300 relative`}>
