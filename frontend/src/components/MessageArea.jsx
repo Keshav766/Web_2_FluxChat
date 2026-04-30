@@ -33,6 +33,8 @@ function MessageArea() {
   const handleSendingMessage = async (e) => {
     e.preventDefault()
 
+    if (input.length == 0 && backendImage == null) return
+
     try {
       const formData = new FormData()
 
@@ -176,14 +178,15 @@ function MessageArea() {
               className='w-6.5 h-6.5 text-white'
             />
           </div>
-          <button
+          {(input.length > 0 || backendImage) && <button
             type='submit'
             className='cursor-pointer'
           >
             <IoSend
               className='w-6.5 h-6.5 text-white'
             />
-          </button>
+          </button>}
+
         </form>
       </div>}
 

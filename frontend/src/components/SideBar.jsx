@@ -37,7 +37,7 @@ function SideBar() {
     }
 
     return (
-        <div className={`lg:w-[30%] lg:block ${!selectedUser ? "block" : "hidden"} w-full h-full bg-slate-200`}>
+        <div className={`lg:w-[30%] lg:block ${!selectedUser ? "block" : "hidden"} w-full h-full overflow-hidden bg-slate-200`}>
             <div
                 className={sidebar.logout}
                 onClick={handleLogOut}
