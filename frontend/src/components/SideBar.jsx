@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { sidebar } from '../styles/home'
 import { useDispatch, useSelector } from 'react-redux'
 import dp from "../assets/empty_dp.png"
@@ -7,16 +7,24 @@ import { IoCloseSharp } from "react-icons/io5";
 import { BiLogOut } from "react-icons/bi";
 import { serverURL } from '../main.jsx';
 import axios from 'axios';
-import { setUserData, setOtherUsers, setSelectedUser } from "../redux/userSlice";
+import {
+    setUserData,
+    setOtherUsers,
+    setSelectedUser,
+    setSearchData
+} from "../redux/userSlice";
 import { useNavigate } from 'react-router-dom';
 
-
 function SideBar() {
-    const { userData, otherUsers } = useSelector(state => state.user)
+    const { userData,
+        otherUsers,
+        selectedUser,
+        onlineUsers,
+        searchData } = useSelector(state => state.user)
     const [search, setSearch] = useState(false);
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const { selectedUser } = useSelector(state => state.user)
+    const [searchInput, setSearchInput] = useState("")
 
     const handleLogOut = async () => {
         try {
@@ -36,6 +44,24 @@ function SideBar() {
         }
     }
 
+    const handleSearch = async () => {
+        try {
+            const result = await axios.get(
+                `${serverURL}/api/user/search?query=${searchInput}`,
+                { withCredentials: true })
+            dispatch(setSearchData(result.data))
+            console.log(result.data)
+        } catch (error) {
+            console.log(`handleSearch error: ${error.message}`)
+        }
+    }
+
+    useEffect(() => {
+        if (searchInput) {
+            handleSearch()
+        }
+    }, [searchInput])
+
     return (
         <div className={`lg:w-[30%] lg:block ${!selectedUser ? "block" : "hidden"} w-full h-full overflow-hidden bg-slate-200`}>
             <div
@@ -44,11 +70,37 @@ function SideBar() {
             >
                 <BiLogOut className='w-6 h-6' />
             </div>
+            {searchInput.length > 0 && <div className='flex w-full top-0 h-75 overflow-y-auto flex-col gap-2.5'>
+                {searchData?.map((user) => {
+                    <div
+                        className={sidebar.chatlistItem}
+                        key={user._id}
+                        onClick={() => dispatch(setSelectedUser(user))}
+                    >
+                        <div className='relative rounded-full'>
+                            <div className={sidebar.chatlistProfileImageWrapper}
+                                key={user._id}
+                            >
+                                <img
+                                    src={user.image || dp}
+                                    className={sidebar.otherProfileImage}
+                                />
+                            </div>
+                            {onlineUsers?.includes(user._id) && <span
+                                className='w-3 h-3 rounded-full bg-green-300 absolute -right-px -bottom-px'
+                            ></span>}
+
+                        </div>
+                        <h1 className='text-gray-600 font-semibold text-[15px]'>{user.name || user.userName}</h1>
+                    </div>
+                })}
+            </div>}
+
             <div className={sidebar.header}>
                 <h1 className={sidebar.title}>FluxChat</h1>
                 <div className={sidebar.userRow}>
                     <h1 className={sidebar.userName}>Yo, {userData?.name || "User"}</h1>
-                    <div className={sidebar.profileImageWrapper}>
+                    <div className={sidebar.profileImageWrapperM}>
                         <img
                             src={userData.image || dp}
                             className={sidebar.currentProfileImage}
@@ -69,22 +121,32 @@ function SideBar() {
                             <input
                                 type="text"
                                 placeholder='search here...'
-                                className='w-full h-full p-2.5 outline-0 border-0'
+                                value={searchInput}
+                                className='w-full h-full p-2.5 outline-none border-0'
+                                onChange={(e) => setSearchInput(e.target.value)}
                             />
                             <IoCloseSharp
                                 className='w-6 h-6 cursor-pointer'
                                 onClick={() => setSearch(false)} />
-
                         </form>
                     }
                     {!search && otherUsers?.map((user) => (
-                        <div className={sidebar.profileImageWrapper}
-                            key={user._id}
+                        onlineUsers?.includes(user._id) &&
+                        <div
+                            className='relative rounded-full cursor-pointer'
+                            onClick={() => dispatch(setSelectedUser(user))}
                         >
-                            <img
-                                src={user.image || dp}
-                                className={sidebar.otherProfileImage}
-                            />
+                            <div className={sidebar.profileImageWrapper}
+                                key={user._id}
+                            >
+                                <img
+                                    src={user.image || dp}
+                                    className={sidebar.otherProfileImage}
+                                />
+                            </div>
+                            <span
+                                className='w-3 h-3 rounded-full bg-green-300 absolute -right-px -bottom-px'
+                            ></span>
                         </div>
                     ))}
                 </div>
@@ -96,17 +158,25 @@ function SideBar() {
                         key={user._id}
                         onClick={() => dispatch(setSelectedUser(user))}
                     >
-                        <div className={sidebar.chatlistProfileImageWrapper}>
-                            <img
-                                src={user.image || dp}
-                                className={sidebar.otherProfileImage}
-                            />
+                        <div className='relative rounded-full'>
+                            <div className={sidebar.chatlistProfileImageWrapper}
+                                key={user._id}
+                            >
+                                <img
+                                    src={user.image || dp}
+                                    className={sidebar.otherProfileImage}
+                                />
+                            </div>
+                            {onlineUsers?.includes(user._id) && <span
+                                className='w-3 h-3 rounded-full bg-green-300 absolute -right-px -bottom-px'
+                            ></span>}
+
                         </div>
                         <h1 className='text-gray-600 font-semibold text-[15px]'>{user.name || user.userName}</h1>
                     </div>
                 ))}
             </div>
-        </div>
+        </div >
     )
 }
 

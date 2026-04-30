@@ -23,7 +23,7 @@ function ReceiverMessage({ image, message }) {
                 />
             </div>
             <div
-                className='w-fit px-5 py-2.5 max-w-125 bg-[#34c2f1] shadow-gray-400 shadow-lg text-white rounded-tl-none rounded-2xl flex flex-col gap-2'
+                className='w-fit px-5 py-2.5 max-w-125 bg-[#2e8faf] shadow-gray-400 shadow-lg text-white rounded-tl-none rounded-2xl flex flex-col gap-2'
                 ref={scroll}
             >
                 {image && <img

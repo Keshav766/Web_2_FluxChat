@@ -93,7 +93,7 @@ function MessageArea() {
               {selectedUser?.userName || "User"}
             </h1>
           </div>
-          <div className='w-full h-full flex flex-col pt-6 px-5 pb-30 overflow-auto gap-4'>
+          <div className='w-full h-[80%] flex flex-col px-5 py-5 overflow-auto gap-5'>
             {showPicker && <div className=' absolute bottom-28 left-5 z-50'>
               <EmojiPicker
                 width={250}

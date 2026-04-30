@@ -29,7 +29,7 @@ export const editProfile = async (req, res) => {
         const user = await User.findByIdAndUpdate(req.userId, {
             name,
             image
-        }, {new : true})
+        }, { new: true })
 
         if (!user) {
             return res.status(400).json({ message: "User not found" })
@@ -54,5 +54,22 @@ export const getOtherUsers = async (req, res) => {
             message: `get other user error : ${error.message}`
         })
     }
+}
 
+export const search = async (req, res) => {
+    try {
+        const { query } = req.query
+        if (!query) {
+            return res.status(400).json({ message: "query is required" })
+        }
+        const users = await User.find({
+            $or: [
+                { name: { $regex: query, $options: "i" } },
+                { userName: { $regex: query, $options: "i" } },
+            ]
+        })
+        return res.status(200).json(users)
+    } catch (error) {
+        return res.status(500).json({ message: `get other users error ${error.message}` })
+    }
 }
